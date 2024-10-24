@@ -1,0 +1,95 @@
+//Gideon Simiyu//
+
+
+Map.centerObject(geometry)
+
+
+//call modis ocean product// 
+
+var modis = ee.ImageCollection("NASA/OCEANDATA/MODIS-Terra/L3SMI")
+.filterDate('2020','2022');
+
+// mapping for bands // Chlorophyl
+
+var chl = modis.mean().select('chlor_a');
+
+Map.addLayer(chl.clip(geometry), [], 'chl', false)
+
+
+//photoplankton band //
+var phyto = modis.mean().select('nflh');
+
+Map.addLayer(phyto.clip(geometry),[],'phyto', false)
+
+// particulate organic carbon//
+
+var poc = modis.mean().select('poc');
+
+Map.addLayer(poc.clip(geometry),[],'poc',false)
+
+
+//Time series analysis//
+
+// stack raster layers//
+
+//sea surface temperature//
+
+// stack raster layers
+
+var sst = modis.select('sst')
+.filter(ee.Filter.calendarRange(1,5,'month'));
+
+var sst_stack = sst.toBands();
+
+Map.addLayer(sst_stack.clip(geometry),[],'sst_stack', false)
+
+
+Export.image.toDrive({
+  image: sst_stack.clip(geometry),
+  description: 'sst_modis',
+  scale: 5000,
+  region: geometry,
+  crs: 'EPSG:4326',
+  maxPixels: 1e13,
+  folder: 'test'
+  })
+
+
+// temporal collection in EE platform
+
+function temporal_collection(collection, start, count, interval, unit){
+  var seq = ee.List.sequence(0, ee.Number(count).subtract(1));
+  var origin_date = ee.Date(start);
+  return ee.ImageCollection(seq.map(function(i){
+    var start_date = origin_date.advance(ee.Number(interval).multiply(i), unit);
+    var end_date = origin_date.advance(ee.Number(interval).multiply(ee.Number(i).add(1)), unit);
+    return collection.filterDate(start_date, end_date).mean()
+    .set('system:time_start', start_date.millis())
+    .set('system:time_end', end_date.millis())
+    }))
+  }
+  
+  
+  //104 weeks for the 2 years //
+var weekly = temporal_collection(modis, '2020', 104, 1, 'week');
+ print(weekly)
+ 
+ //print chlorophy from 2020 to 2022//
+ 
+print(
+  ui.Chart.image.series(weekly.select('chlor_a'), geometry, ee.Reducer.mean(),
+  5000, 'system:time_start')
+  )
+
+ //print all the bands from 2020 to 2022//
+print(
+  ui.Chart.image.series(weekly, geometry, ee.Reducer.mean(),
+  5000, 'system:time_start')
+  )
+
+
+ //print SST from 2020 to 2022//
+print(
+  ui.Chart.image.series(weekly.select('sst'), geometry, ee.Reducer.mean(),
+  5000, 'system:time_start')
+  )
