@@ -1,1 +1,6 @@
-# Water-Chlorophyll-Mapping-using-MODIS-Ocean-Product
+# Water-Chlorophyll-Mapping-using-MODIS-Ocean-Product![Chlorophyl  visualization](https://github.com/user-attachments/assets/e5c5b176-f95d-429e-bf40-ee63093f9d40)
+![2 Photoplankton band](https://github.com/user-attachments/assets/bfaf8f17-3a83-447b-9712-7ef7645578e2)
+![3 Particulate organic matter](https://github.com/user-attachments/assets/1dbfa1c5-4e49-4dc9-87b3-ba67086c47e4)
+![ALL BANDS](https://github.com/user-attachments/assets/40f76aa5-ed39-4c3e-be1f-a61d8a2507c9)
+![SST](https://github.com/user-attachments/assets/5d1c45f3-e549-4f26-840a-dee493275800)
+![CHLOROPHYL](https://github.com/user-attachments/assets/e746d5e5-1499-4da7-aac3-a7fcfa770253)
